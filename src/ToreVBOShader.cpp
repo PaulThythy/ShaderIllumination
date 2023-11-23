@@ -113,9 +113,9 @@ void createTorus(float R, float r)
   theta = ((float)radians(360.f)) / ((float)NB_R);
   phi = ((float)(radians(360.f))) / ((float)NB_r);
 
-  float pasU, pasV;
-  pasU = 1. / NB_R;
-  pasV = 1. / NB_r;
+  float stepU, stepV;
+  stepU = 1. / NB_R;
+  stepV = 1. / NB_r;
   for (int i = 0; i <= NB_R; i++)
     for (int j = 0; j <= NB_r; j++)
     {
@@ -128,8 +128,8 @@ void createTorus(float R, float r)
       normals[(i * (NB_r + 1) * 3) + (j * 3) + 1] = cos((float)j * phi) * sin((float)i * theta); // y
       normals[(i * (NB_r + 1) * 3) + (j * 3) + 2] = sin((float)j * phi);
 
-      coordTexture[(i * (NB_r + 1) * 2) + (j * 2)] = ((float)i) * pasV;
-      coordTexture[(i * (NB_r + 1) * 2) + (j * 2) + 1] = ((float)j) * pasV;
+      coordTexture[(i * (NB_r + 1) * 2) + (j * 2)] = ((float)i) * stepV;
+      coordTexture[(i * (NB_r + 1) * 2) + (j * 2) + 1] = ((float)j) * stepV;
     }
 
   int indexMaxI = ((NB_R + 1) * (NB_r)) - 1;
