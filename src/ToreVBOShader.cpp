@@ -225,7 +225,7 @@ void initOpenGL(void)
   glEnable(GL_CULL_FACE); // activate face illumination
   glEnable(GL_DEPTH_TEST);
   // the shader
-  programID = LoadShaders("PhongShader.vert", "PhongShader.frag");
+  programID = LoadShaders("../shader/PhongShader.vert", "../shader/PhongShader.frag");
 
   // Get handles for our matrix transformations "MVP" VIEW MODELuniform
   MatrixIDMVP = glGetUniformLocation(programID, "MVP");

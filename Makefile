@@ -8,7 +8,7 @@ LDFLAGS= -lGL -lGLU -lGLEW -lglut
 SRCDIR = src
 BINDIR = bin
 
-SOURCES=$(wildcard $(SRCDIR)*.$(EXT))
+SOURCES=$(wildcard $(SRCDIR)/*.$(EXT))
 # $(wildcard ./utilstexture/*.$(EXT))
 OBJECTS=$(patsubst $(SRCDIR)/%.cpp,$(BINDIR)/%.o,$(SOURCES))
 
@@ -23,7 +23,7 @@ $(EXEC): $(OBJECTS)
 
 $(BINDIR)/%.o: $(SRCDIR)/%.cpp
 		@mkdir -p $(BINDIR)
-		$(CCC) -g -o $@ -c $< $(CFLAGS)
+		$(CXX) -g -o $@ -c $< $(CFLAGS)
 
 
 clean:
