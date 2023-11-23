@@ -1,8 +1,5 @@
 /********************************************************/
-/*                     CubeVBOShader.cpp                         */
-/********************************************************/
-/* Premiers pas avec OpenGL.                            */
-/* Objectif : afficher a l'ecran uncube avec ou sans shader    */
+/*                     CubeVBOShader.cpp                */
 /********************************************************/
 
 /* inclusion des fichiers d'en-tete Glut */
@@ -37,13 +34,12 @@ using namespace std;
 #define NB_r 20
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-GLfloat vertices[(NB_R + 1) * (NB_r + 1) * 3];     // x 3 coordonnées (+1 acr on double les dernierspoints pour avoir des coord de textures <> pour les points de jonctions)
-GLuint indexes[NB_R * NB_r * 6];                   // x6 car pour chaque face quadrangulaire on a 6 indexes (2 triangles=2x 3 indexes)
-GLfloat coordTexture[(NB_R + 1) * (NB_r + 1) * 2]; // x 2 car U+V par vertices
+GLfloat vertices[(NB_R + 1) * (NB_r + 1) * 3];     // *3 coords (+1 to prevent issues of coordinate texture for the first and the last point)
+GLuint indexes[NB_R * NB_r * 6];                   // *6 because each quadrangular face has 6 indexes (2 triangles=2x3 indexes)
+GLfloat coordTexture[(NB_R + 1) * (NB_r + 1) * 2]; // *2 because U+V per vertices
 GLfloat normals[(NB_R + 1) * (NB_r + 1) * 3];
 
 // initializations
-
 void genVBO();
 void deleteVBO();
 void drawObject();
@@ -218,8 +214,8 @@ void initTexture(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexImage2D(GL_TEXTURE_2D, 0, 3, iwidth, iheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-  locationTexture = glGetUniformLocation(programID, "myTextureSampler"); // et il y a la texture elle même
-                                                                         //   glBindAttribLocation(programID,indexUVTexture,"vertexUV");	// il y a les coord UV
+  locationTexture = glGetUniformLocation(programID, "myTextureSampler"); // and there is the texture itself
+                                                                         //   glBindAttribLocation(programID,indexUVTexture,"vertexUV");	// there are UV coords
 }
 //----------------------------------------
 void initOpenGL(void)
@@ -231,17 +227,17 @@ void initOpenGL(void)
   // the shader
   programID = LoadShaders("PhongShader.vert", "PhongShader.frag");
 
-  // Get  handles for our matrix transformations "MVP" VIEW  MODELuniform
+  // Get handles for our matrix transformations "MVP" VIEW MODELuniform
   MatrixIDMVP = glGetUniformLocation(programID, "MVP");
   // MatrixIDView = glGetUniformLocation(programID, "VIEW");
   // MatrixIDModel = glGetUniformLocation(programID, "MODEL");
   // MatrixIDPerspective = glGetUniformLocation(programID, "PERSPECTIVE");
 
   // Projection matrix : 65 Field of View, 1:1 ratio, display range : 1 unit <-> 1000 units
-  // ATTENTIOn l'angle est donné en radians si f GLM_FORCE_RADIANS est défini sinon en degré
+  // ATTENTION the angle is given in radians if f GLM_FORCE_RADIANS is defined, otherwise in degrees
   Projection = glm::perspective(glm::radians(60.f), 1.0f, 1.0f, 1000.0f);
 
-  /* on recupere l'ID */
+  /* ID recover */
   locCameraPosition = glGetUniformLocation(programID, "cameraPosition");
   /*
   locmaterialShininess = glGetUniformLocation(programID, "materialShininess");
@@ -257,8 +253,7 @@ int main(int argc, char **argv)
 //----------------------------------------
 {
 
-  /* initialisation de glut et creation
-     de la fenetre */
+  /* glut initialization and window creation */
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
@@ -273,30 +268,30 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  // info version GLSL
+  // info GLSL version 
   std::cout << "***** Info GPU *****" << std::endl;
-  std::cout << "Fabricant : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << "Carte graphique: " << glGetString(GL_RENDERER) << std::endl;
+  std::cout << "Manufacturer : " << glGetString(GL_VENDOR) << std::endl;
+  std::cout << "Graphic Card : " << glGetString(GL_RENDERER) << std::endl;
   std::cout << "Version : " << glGetString(GL_VERSION) << std::endl;
-  std::cout << "Version GLSL : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl
+  std::cout << "GLSL Version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl
             << std::endl;
 
   initOpenGL();
 
   createTorus(1., .3);
 
-  // construction des VBO a partir des tableaux du cube deja construit
+  // construction of VBOs from cube tables already built
   genVBO();
   initTexture();
 
-  /* enregistrement des fonctions de rappel */
+  /* calling callback functions */
   glutDisplayFunc(display);
   glutKeyboardFunc(keyboard);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
   glutMotionFunc(mouseMotion);
 
-  /* Entree dans la boucle principale glut */
+  /* glut main loop */
   glutMainLoop();
 
   glDeleteProgram(programID);
@@ -307,7 +302,7 @@ int main(int argc, char **argv)
 void genVBO()
 {
   glGenBuffers(1, &VAO);
-  glBindVertexArray(VAO); // ici on bind le VAO , c'est lui qui recupèrera les configurations des VBO glVertexAttribPointer , glEnableVertexAttribArray...
+  glBindVertexArray(VAO); // VAO binding , it will retrieve the VBO configurations glVertexAttribPointer , glEnableVertexAttribArray...
 
   if (glIsBuffer(VBO_vertices) == GL_TRUE)
     glDeleteBuffers(1, &VBO_vertices);
@@ -325,7 +320,7 @@ void genVBO()
 
   if (glIsBuffer(VBO_indexes) == GL_TRUE)
     glDeleteBuffers(1, &VBO_indexes);
-  glGenBuffers(1, &VBO_indexes); // ATTENTIOn IBO doit etre un GL_ELEMENT_ARRAY_BUFFER
+  glGenBuffers(1, &VBO_indexes); // ATTENTION IBO has to be a GL_ELEMENT_ARRAY_BUFFER
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indexes);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), indexes, GL_STATIC_DRAW);
 
@@ -340,8 +335,7 @@ void genVBO()
   glEnableVertexAttribArray(indexNormale);
   glEnableVertexAttribArray(indexUVTexture);
 
-  // une fois la config terminée
-  // on désactive le dernier VBO et le VAO pour qu'ils ne soit pas accidentellement modifié
+  // once the configuration is complete, we deactivate the last VBO and VAO so that they are not accidentally modified
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
@@ -360,8 +354,8 @@ void deleteVBO()
 void display()
 {
 
-  /* effacement de l'image avec la couleur de fond */
-  /* Initialisation d'OpenGL */
+  /* erase image */
+  /* OpenGL init */
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClearDepth(10.0f); // 0 is near, >0 is far
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -378,22 +372,22 @@ void display()
   Model = glm::rotate(Model, glm::radians(cameraAngleY), glm::vec3(0, 1, 0));
   Model = glm::scale(Model, glm::vec3(.8, .8, .8));
   MVP = Projection * View * Model;
-  drawObject(); // trace VBO avec ou sans shader
+  drawObject(); // draw VBO with or without shader
 
-  /* on force l'display du resultat */
+  /* force display result */
   glutPostRedisplay();
   glutSwapBuffers();
 }
 
 //-------------------------------------
-// Trace le tore 2 via le VAO
+// draw torus with VAO
 void drawObject()
 //-------------------------------------
 {
   // Use  shader & MVP matrix   MVP = Projection * View * Model;
   glUseProgram(programID);
 
-  // on envoie les données necessaires aux shaders */
+  // send the necessary data to the shaders */
   glUniformMatrix4fv(MatrixIDMVP, 1, GL_FALSE, &MVP[0][0]);
   // glUniformMatrix4fv(MatrixIDView, 1, GL_FALSE,&View[0][0]);
   // glUniformMatrix4fv(MatrixIDModel, 1, GL_FALSE, &Model[0][0]);
@@ -410,17 +404,17 @@ void drawObject()
    glUniform1f(locLightAmbientCoefficient,LightAmbientCoefficient);
   */
 
-  // pour l'display
-  glBindVertexArray(VAO);                                            // on active le VAO
-  glDrawElements(GL_TRIANGLES, sizeof(indexes), GL_UNSIGNED_INT, 0); // on appelle la fonction dessin
-  glBindVertexArray(0);                                              // on desactive les VAO
-  glUseProgram(0);                                                   // et le pg
+  // for display
+  glBindVertexArray(VAO);                                            // activate VAO
+  glDrawElements(GL_TRIANGLES, sizeof(indexes), GL_UNSIGNED_INT, 0); // recall draw function
+  glBindVertexArray(0);                                              // deactivate VAO
+  glUseProgram(0);                                                   // and pg
 }
 
 void reshape(int w, int h)
 {
   // set viewport to be the entire window
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h); // ATTENTION GLsizei important - indique qu'il faut convertir en entier non négatif
+  glViewport(0, 0, (GLsizei)w, (GLsizei)h); // ATTENTION GLsizei indicates conversion to non-negative integer
 
   // set perspective viewing frustum
   float aspectRatio = (float)w / h;
@@ -432,60 +426,60 @@ void keyboard(unsigned char touche, int x, int y)
 {
   switch (touche)
   {
-  case 'f': /* display du carre plein */
+  case 'f': /* full square display */
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glutPostRedisplay();
     break;
-  case 'e': /* display en mode fil de fer */
+  case 'e': /* wire mode display */
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glutPostRedisplay();
     break;
-  case 'v': /* display en mode vertices seuls */
+  case 'v': /* vertices-only mode display */
     glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     glutPostRedisplay();
     break;
-  case 's': /* display en mode vertices seuls */
+  case 's': /* vertices-only mode display */
     materialShininess -= .5;
     glutPostRedisplay();
     break;
-  case 'S': /* display en mode vertices seuls */
+  case 'S': /* vertices-only mode display */
     materialShininess += .5;
     glutPostRedisplay();
     break;
-  case 'x': /* display en mode vertices seuls */
+  case 'x': /* vertices-only mode display */
     LightPosition.x -= .2;
     glutPostRedisplay();
     break;
-  case 'X': /* display en mode vertices seuls */
+  case 'X': /* vertices-only mode display */
     LightPosition.x += .2;
     glutPostRedisplay();
     break;
-  case 'y': /* display en mode vertices seuls */
+  case 'y': /* vertices-only mode display */
     LightPosition.y -= .2;
     glutPostRedisplay();
     break;
-  case 'Y': /* display en mode vertices seuls */
+  case 'Y': /* vertices-only mode display */
     LightPosition.y += .2;
     glutPostRedisplay();
     break;
-  case 'z': /* display en mode vertices seuls */
+  case 'z': /* vertices-only mode display */
     LightPosition.z -= .2;
     glutPostRedisplay();
     break;
-  case 'Z': /* display en mode vertices seuls */
+  case 'Z': /* vertices-only mode display */
     LightPosition.z += .2;
     glutPostRedisplay();
     break;
-  case 'a': /* display en mode vertices seuls */
+  case 'a': /* vertices-only mode display */
     LightAmbientCoefficient -= .1;
     glutPostRedisplay();
     break;
-  case 'A': /* display en mode vertices seuls */
+  case 'A': /* vertices-only mode display */
     LightAmbientCoefficient += .1;
     glutPostRedisplay();
     break;
 
-  case 'q': /*la touche 'q' permet de quitter le programme */
+  case 'q': /* 'q' key quit the program */
     exit(0);
   }
 }

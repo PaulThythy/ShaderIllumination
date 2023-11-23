@@ -14,7 +14,7 @@ OBJECTS=$(patsubst $(SRCDIR)/%.cpp,$(BINDIR)/%.o,$(SOURCES))
 
 DEBUBFLAG=-g
 
-EXEC=$(BINDIR/)main
+EXEC=$(BINDIR)/ToreVBOShader
 
 all: $(EXEC)
 
