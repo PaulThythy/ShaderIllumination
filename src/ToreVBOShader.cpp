@@ -259,7 +259,7 @@ int main(int argc, char **argv)
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowPosition(200, 200);
   glutInitWindowSize(screenWidth, screenHeight);
-  glutCreateWindow("CUBE VBO SHADER ");
+  glutCreateWindow("TORUS VBO SHADER ");
 
   // Initialize GLEW
   if (glewInit() != GLEW_OK)
@@ -280,7 +280,7 @@ int main(int argc, char **argv)
 
   createTorus(1., .3);
 
-  // construction of VBOs from cube tables already built
+  // construction of VBOs from torus tables already built
   genVBO();
   initTexture();
 
