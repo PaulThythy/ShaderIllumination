@@ -77,7 +77,7 @@ GLuint locLightAttenuation;
 GLuint locLightAmbientCoefficient;
 
 // VBO's location
-//------------------
+//--------------------------------------
 GLuint indexVertex = 0, indexUVTexture = 2, indexNormale = 3;
 
 // variable for lighting param
