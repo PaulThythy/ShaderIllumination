@@ -19,11 +19,12 @@ out vec4 finalColor;
 
 void main() {
 
-	finalColor = vec4(fragPosition, 1.);
+	// color is the x,y,z fragment position
+	//finalColor = vec4(fragPosition, 1.);
 
-	
+	// Calculate ambient light
+    vec3 ambientLight = light.intensities * light.ambientCoefficient;
 
-	//finalColor = vec4(1.0, 0.0, 0.0, 1.0);
-	//finalColor = vec4(finalColor, 1.0);
-
+	// Output final color (without texture)
+    finalColor = vec4(ambientLight, 1.0);
 }

@@ -159,7 +159,7 @@ void createTorus(float R, float r)
 // for the light
 void createLight() {
   light.position.push_back(1.); light.position.push_back(0.); light.position.push_back(.5);
-  light.intensities.push_back(1.); light.intensities.push_back(1.); light.intensities.push_back(1.);
+  light.intensities.push_back(1.); light.intensities.push_back(0.); light.intensities.push_back(0.);
   light.attenuation = 1.;
   light.ambientCoefficient = .1;
 }
