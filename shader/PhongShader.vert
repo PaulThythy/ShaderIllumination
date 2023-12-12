@@ -5,6 +5,13 @@ uniform mat4 MVP;
 
 layout(location = 0) in vec3 position; // the location specifies the stream/channel from which the data is retrieved (must match the location in the opengl code)
 
+uniform struct Light {
+	vec3 position;
+	vec3 intensities;
+	float ambientCoefficient;
+	float attenuation;
+} light;
+
 out vec3 fragPosition;
 
 void main(){

@@ -4,6 +4,7 @@
 
 /* inclusion des fichiers d'en-tete Glut */
 #include <iostream>
+#include <vector>
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
@@ -90,10 +91,17 @@ vec3 materialSpecularColor(1., .1, 1); // material color
 
 // light
 //-----------
-vec3 LightPosition(1., 0., .5);
-vec3 LightIntensities(1., 1., 1.); // light color
-GLfloat LightAttenuation = 1.;
-GLfloat LightAmbientCoefficient = .1;
+struct Light{
+  vector<GLfloat> position;
+
+  // light color
+  vector<GLfloat> intensities;
+
+  GLfloat attenuation;
+  GLfloat ambientCoefficient;
+};
+Light light;
+
 
 glm::mat4 MVP;                     
 glm::mat4 Model, View, Projection; // Matrixes building MVP
@@ -146,6 +154,14 @@ void createTorus(float R, float r)
       indexes[(i * NB_r * 6) + (j * 6) + 4] = (unsigned int)(((i + 1) * (NB_r + 1)) + (j + 1));
       indexes[(i * NB_r * 6) + (j * 6) + 5] = (unsigned int)(((i) * (NB_r + 1)) + (j + 1));
     }
+}
+
+// for the light
+void createLight() {
+  light.position.push_back(1.); light.position.push_back(0.); light.position.push_back(.5);
+  light.intensities.push_back(1.); light.intensities.push_back(1.); light.intensities.push_back(1.);
+  light.attenuation = 1.;
+  light.ambientCoefficient = .1;
 }
 
 //----------------------------------------
@@ -239,14 +255,15 @@ void initOpenGL(void)
 
   /* ID recover */
   locCameraPosition = glGetUniformLocation(programID, "cameraPosition");
-  /*
+  
   locmaterialShininess = glGetUniformLocation(programID, "materialShininess");
   locmaterialSpecularColor = glGetUniformLocation(programID, "materialSpecularColor");
+
   locLightPosition = glGetUniformLocation(programID, "light.position");
-  locLightIntensities = glGetUniformLocation(programID, "light.intensities");//a.k.a the color of the light
+  locLightIntensities = glGetUniformLocation(programID, "light.intensities");               //a.k.a the color of the light
   locLightAttenuation = glGetUniformLocation(programID, "light.attenuation");
   locLightAmbientCoefficient = glGetUniformLocation(programID, "light.ambientCoefficient");
-  */
+  
 }
 //----------------------------------------
 int main(int argc, char **argv)
@@ -278,6 +295,7 @@ int main(int argc, char **argv)
 
   initOpenGL();
 
+  createLight();
   createTorus(1., .3);
 
   // construction of VBOs from torus tables already built
@@ -395,14 +413,13 @@ void drawObject()
 
   glUniform3f(locCameraPosition, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
-  /*
    glUniform1f(locmaterialShininess,materialShininess);
    glUniform3f(locmaterialSpecularColor,materialSpecularColor.x,materialSpecularColor.y,materialSpecularColor.z);
-   glUniform3f(locLightPosition,LightPosition.x,LightPosition.y,LightPosition.z);
-   glUniform3f(locLightIntensities,LightIntensities.x,LightIntensities.y,LightIntensities.z);
-   glUniform1f(locLightAttenuation,LightAttenuation);
-   glUniform1f(locLightAmbientCoefficient,LightAmbientCoefficient);
-  */
+   glUniform3f(locLightPosition,light.position[0],light.position[1],light.position[2]);
+   glUniform3f(locLightIntensities,light.intensities[0],light.intensities[1],light.intensities[2]);
+   glUniform1f(locLightAttenuation,light.attenuation);
+   glUniform1f(locLightAmbientCoefficient,light.ambientCoefficient);
+  
 
   // for display
   glBindVertexArray(VAO);                                            // activate VAO
@@ -447,35 +464,35 @@ void keyboard(unsigned char touche, int x, int y)
     glutPostRedisplay();
     break;
   case 'x': /* vertices-only mode display */
-    LightPosition.x -= .2;
+    light.position[0] -= .2;
     glutPostRedisplay();
     break;
   case 'X': /* vertices-only mode display */
-    LightPosition.x += .2;
+    light.position[0] += .2;
     glutPostRedisplay();
     break;
   case 'y': /* vertices-only mode display */
-    LightPosition.y -= .2;
+    light.position[1] -= .2;
     glutPostRedisplay();
     break;
   case 'Y': /* vertices-only mode display */
-    LightPosition.y += .2;
+    light.position[1] += .2;
     glutPostRedisplay();
     break;
   case 'z': /* vertices-only mode display */
-    LightPosition.z -= .2;
+    light.position[2] -= .2;
     glutPostRedisplay();
     break;
   case 'Z': /* vertices-only mode display */
-    LightPosition.z += .2;
+    light.position[2] += .2;
     glutPostRedisplay();
     break;
   case 'a': /* vertices-only mode display */
-    LightAmbientCoefficient -= .1;
+    light.ambientCoefficient -= .1;
     glutPostRedisplay();
     break;
   case 'A': /* vertices-only mode display */
-    LightAmbientCoefficient += .1;
+    light.ambientCoefficient += .1;
     glutPostRedisplay();
     break;
 
