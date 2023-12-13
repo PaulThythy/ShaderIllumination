@@ -14,6 +14,7 @@ uniform struct Light {
 } light;
 
 in vec3 fragPosition;
+in vec3 fragNormal;
 
 out vec4 finalColor;
 
@@ -23,8 +24,16 @@ void main() {
 	//finalColor = vec4(fragPosition, 1.);
 
 	// Calculate ambient light
-    vec3 ambientLight = light.intensities * light.ambientCoefficient;
+    //vec3 ambientLight = light.intensities * light.ambientCoefficient;
 
 	// Output final color (without texture)
-    finalColor = vec4(ambientLight, 1.0);
+    //finalColor = vec4(ambientLight, 1.0);
+
+	vec3 normal = normalize(fragNormal);
+	vec3 lightDir = normalize(light.position - fragPosition);
+
+	float diff = max(dot(normal, lightDir), 0.0);
+	vec3 diffuse = light.intensities * diff;
+
+	finalColor = vec4(diffuse, 1.0);
 }

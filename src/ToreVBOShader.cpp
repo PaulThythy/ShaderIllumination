@@ -79,7 +79,7 @@ GLuint locLightAmbientCoefficient;
 
 // VBO's location
 //--------------------------------------
-GLuint indexVertex = 0, indexUVTexture = 2, indexNormale = 3;
+GLuint indexVertex = 0, indexUVTexture = 2, indexNormal = 3;
 
 // variable for lighting param
 //--------------------------------------
@@ -245,9 +245,9 @@ void initOpenGL(void)
 
   // Get handles for our matrix transformations "MVP" VIEW MODELuniform
   MatrixIDMVP = glGetUniformLocation(programID, "MVP");
-  // MatrixIDView = glGetUniformLocation(programID, "VIEW");
-  // MatrixIDModel = glGetUniformLocation(programID, "MODEL");
-  // MatrixIDPerspective = glGetUniformLocation(programID, "PERSPECTIVE");
+  MatrixIDView = glGetUniformLocation(programID, "VIEW");
+  MatrixIDModel = glGetUniformLocation(programID, "MODEL");
+  MatrixIDPerspective = glGetUniformLocation(programID, "PERSPECTIVE");
 
   // Projection matrix : 65 Field of View, 1:1 ratio, display range : 1 unit <-> 1000 units
   // ATTENTION the angle is given in radians if f GLM_FORCE_RADIANS is defined, otherwise in degrees
@@ -334,7 +334,7 @@ void genVBO()
   glGenBuffers(1, &VBO_normals);
   glBindBuffer(GL_ARRAY_BUFFER, VBO_normals);
   glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
-  glVertexAttribPointer(indexNormale, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+  glVertexAttribPointer(indexNormal, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
 
   if (glIsBuffer(VBO_indexes) == GL_TRUE)
     glDeleteBuffers(1, &VBO_indexes);
@@ -350,7 +350,7 @@ void genVBO()
   glVertexAttribPointer(indexUVTexture, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
 
   glEnableVertexAttribArray(indexVertex);
-  glEnableVertexAttribArray(indexNormale);
+  glEnableVertexAttribArray(indexNormal);
   glEnableVertexAttribArray(indexUVTexture);
 
   // once the configuration is complete, we deactivate the last VBO and VAO so that they are not accidentally modified
