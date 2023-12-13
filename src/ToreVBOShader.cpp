@@ -407,9 +407,9 @@ void drawObject()
 
   // send the necessary data to the shaders */
   glUniformMatrix4fv(MatrixIDMVP, 1, GL_FALSE, &MVP[0][0]);
-  // glUniformMatrix4fv(MatrixIDView, 1, GL_FALSE,&View[0][0]);
-  // glUniformMatrix4fv(MatrixIDModel, 1, GL_FALSE, &Model[0][0]);
-  // glUniformMatrix4fv(MatrixIDPerspective, 1, GL_FALSE, &Projection[0][0]);
+  glUniformMatrix4fv(MatrixIDView, 1, GL_FALSE,&View[0][0]);
+  glUniformMatrix4fv(MatrixIDModel, 1, GL_FALSE, &Model[0][0]);
+  glUniformMatrix4fv(MatrixIDPerspective, 1, GL_FALSE, &Projection[0][0]);
 
   glUniform3f(locCameraPosition, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
