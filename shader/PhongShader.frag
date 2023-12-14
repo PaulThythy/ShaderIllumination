@@ -31,12 +31,21 @@ void main() {
 	// Output final color (without texture)
     //finalColor = vec4(ambientLight, 1.0);
 
+	//distance between surface and light source
+	float distance = length(light.position - fragPosition);
+
+	//attenuation calculation
+	float attenuation = 1.0 / (1.0 + light.attenuation * distance + light.attenuation * distance * distance);
+
 	//diffuse light
 	vec3 normal = normalize(fragNormal);
 	vec3 lightDir = normalize(light.position - fragPosition);
 
 	float diff = max(dot(normal, lightDir), 0.0);
-	vec3 diffuse = light.intensities * diff;
+	// diffuse only for diffuse lighting
+	//vec3 diffuse = light.intensities * diff;
+	// diffuse for specular lighting with attenuation
+	vec3 diffuse = light.intensities * diff * attenuation;
 
 	//finalColor = vec4(diffuse, 1.0);
 
@@ -47,7 +56,10 @@ void main() {
 	
 	//specular component calculation
 	float spec = pow(max(dot(reflectDir, viewDir), 0.0), materialShininess);
-	vec3 specular = light.intensities * materialSpecularColor * spec;
+	//specular only for specular lighting
+	//vec3 specular = light.intensities * materialSpecularColor * spec;
+	//specular for specular lightinh with attenuation
+	vec3 specular = light.intensities * materialSpecularColor * spec * attenuation;
 
 	finalColor = vec4(diffuse + specular, 1.0);
 }
