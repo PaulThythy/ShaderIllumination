@@ -3,6 +3,7 @@
 uniform vec3 cameraPosition;
 
 uniform sampler2D myTextureSampler;
+uniform sampler2D myNormalMapSampler;
 uniform mat4 MODEL;
 uniform float materialShininess;
 uniform vec3 materialSpecularColor;
@@ -71,3 +72,9 @@ void main() {
 	// color for texture combined with specular
 	finalColor = texture(myTextureSampler, TexCoord) * vec4(diffuse + specular, 1.0);
 }
+
+
+// usefull links for nomal mapping
+// https://learnopengl.com/Advanced-Lighting/Normal-Mapping
+// https://shader-tutorial.dev/intermediates/normal-mapping/
+// http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/
