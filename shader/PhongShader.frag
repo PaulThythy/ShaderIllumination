@@ -17,6 +17,7 @@ uniform struct Light {
 
 in vec3 fragPosition;
 in vec3 fragNormal;
+in vec2 TexCoord;
 
 out vec4 finalColor;
 
@@ -63,5 +64,10 @@ void main() {
 	// specular for specular lighting with attenuation
 	vec3 specular = light.intensities * materialSpecularColor * spec * attenuation;
 
-	finalColor = vec4(diffuse + specular, 1.0);
+	// color for specular lighting
+	//finalColor = vec4(diffuse + specular, 1.0);
+	// color for texture
+	//finalColor = texture(myTextureSampler, TexCoord);
+	// color for texture combined with specular
+	finalColor = texture(myTextureSampler, TexCoord) * vec4(diffuse + specular, 1.0);
 }

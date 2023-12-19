@@ -159,7 +159,7 @@ void createTorus(float R, float r)
 // for the light
 void createLight() {
   light.position.push_back(1.); light.position.push_back(0.); light.position.push_back(.5);
-  light.intensities.push_back(1.); light.intensities.push_back(0.); light.intensities.push_back(0.);
+  light.intensities.push_back(1.); light.intensities.push_back(1.); light.intensities.push_back(1.);
   light.attenuation = 1.;
   light.ambientCoefficient = .1;
 }
@@ -221,7 +221,7 @@ void initTexture(void)
   int iwidth, iheight;
   GLubyte *image = NULL;
 
-  image = glmReadPPM("../texture/Metalcolor.ppm", &iwidth, &iheight);
+  image = glmReadPPM("../texture/Bricks01_COL_VAR1_1K.ppm", &iwidth, &iheight);
   glGenTextures(1, &bufTexture);
   glBindTexture(GL_TEXTURE_2D, bufTexture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -230,8 +230,8 @@ void initTexture(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexImage2D(GL_TEXTURE_2D, 0, 3, iwidth, iheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-  locationTexture = glGetUniformLocation(programID, "myTextureSampler"); // and there is the texture itself
-                                                                         //   glBindAttribLocation(programID,indexUVTexture,"vertexUV");	// there are UV coords
+  locationTexture = glGetUniformLocation(programID, "myTextureSampler");  // and there is the texture itself
+  glBindAttribLocation(programID,indexUVTexture,"vertexUV");	            // there are UV coords
 }
 //----------------------------------------
 void initOpenGL(void)
